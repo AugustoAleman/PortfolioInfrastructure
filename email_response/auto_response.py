@@ -7,7 +7,7 @@ def autoResponse(name, email, sender):
     message = MIMEMultipart()
     message["From"] = sender
     message["To"] = email
-    message["Subject"] = f'{name}, thank you for reaching out.'
+    message["Subject"] = f'💻 {name}, thank you for reaching out.'
 
     # Message body
     html = f'''\

@@ -22,20 +22,6 @@ db = mysql.connector.connect(
     database=os.getenv("DATABASE")
 )
 
-# Email login credentials
-MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-password_key = os.getenv('MAIL_PASSWORD')
-
-# SMTP Server and port no for GMAIL.com
-gmail_server =  os.getenv('EMAIL_SERVER')
-gmail_port = 587
-
-# Starting email server connection
-my_server = smtplib.SMTP(gmail_server, gmail_port)
-my_server.ehlo()
-my_server.starttls()
-my_server.login(MAIL_USERNAME, password_key)
-
 # Starting Flask app
 app = Flask(__name__)
 CORS(app)  
@@ -70,6 +56,22 @@ def submit_form():
 
         cursor.execute(sql, values)
         db.commit()
+
+        # Email login credentials
+        MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+        password_key = os.getenv('MAIL_PASSWORD')
+
+        # SMTP Server and port no for GMAIL.com
+        gmail_server =  os.getenv('EMAIL_SERVER')
+        gmail_port = 587
+
+        # For automated emails
+
+        # Starting email server connection
+        my_server = smtplib.SMTP(gmail_server, gmail_port)
+        my_server.ehlo()
+        my_server.starttls()
+        my_server.login(MAIL_USERNAME, password_key)
     
         # Send automated response
         my_server.sendmail(
