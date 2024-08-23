@@ -18,28 +18,6 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)  
 
-# For DB connection to MySQL
-db = mysql.connector.connect(
-    host=os.getenv("DATABASE_HOST"),
-    user=os.getenv("DATABASE_USER"),
-    password=os.getenv("DATABASE_PASSWORD"),
-    database=os.getenv("DATABASE")
-)
-
-# Email login credentials
-MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-password_key = os.getenv('MAIL_PASSWORD')
-
-# SMTP Server and port no for GMAIL.com
-gmail_server =  os.getenv('EMAIL_SERVER')
-gmail_port = 587
-
-# Starting email server connection
-my_server = smtplib.SMTP(gmail_server, gmail_port)
-my_server.ehlo()
-my_server.starttls()
-my_server.login(MAIL_USERNAME, password_key)
-
 @app.route('/', methods=['GET'])
 def home():
     return "Welcome to the Flask app!"
@@ -93,3 +71,25 @@ def submit_form():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8000)))
+
+    # For DB connection to MySQL
+    db = mysql.connector.connect(
+        host=os.getenv("DATABASE_HOST"),
+        user=os.getenv("DATABASE_USER"),
+        password=os.getenv("DATABASE_PASSWORD"),
+        database=os.getenv("DATABASE")
+    )
+
+    # Email login credentials
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    password_key = os.getenv('MAIL_PASSWORD')
+
+    # SMTP Server and port no for GMAIL.com
+    gmail_server =  os.getenv('EMAIL_SERVER')
+    gmail_port = 587
+
+    # Starting email server connection
+    my_server = smtplib.SMTP(gmail_server, gmail_port)
+    my_server.ehlo()
+    my_server.starttls()
+    my_server.login(MAIL_USERNAME, password_key)
