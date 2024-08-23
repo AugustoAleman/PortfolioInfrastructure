@@ -20,7 +20,7 @@ CORS(app)
 
 # For DB connection to MySQL
 db = mysql.connector.connect(
-    host="localhost",
+    host=os.getenv("DATABASE_HOST"),
     user=os.getenv("DATABASE_USER"),
     password=os.getenv("DATABASE_PASSWORD"),
     database=os.getenv("DATABASE")
@@ -31,7 +31,7 @@ MAIL_USERNAME = os.getenv('MAIL_USERNAME')
 password_key = os.getenv('MAIL_PASSWORD')
 
 # SMTP Server and port no for GMAIL.com
-gmail_server = "smtp.gmail.com"
+gmail_server =  os.getenv('EMAIL_SERVER')
 gmail_port = 587
 
 # Starting email server connection
