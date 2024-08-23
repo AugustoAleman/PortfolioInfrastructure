@@ -2,11 +2,9 @@
 from flask import Flask, request, jsonify
 import mysql.connector
 from flask_cors import CORS
-
 import smtplib 
 from email_response.auto_response import autoResponse
 from email_response.auto_notification import autoNotification
-
 from dotenv import load_dotenv
 from datetime import datetime
 import os
@@ -14,14 +12,35 @@ import os
 # Loading environment variables
 load_dotenv()
 
-# Starting Flask app
+# Initialize Flask app
 app = Flask(__name__)
-CORS(app)  
+CORS(app)
+
+# Database connection
+db = mysql.connector.connect(
+    host=os.getenv("DATABASE_HOST"),
+    user=os.getenv("DATABASE_USER"),
+    password=os.getenv("DATABASE_PASSWORD"),
+    database=os.getenv("DATABASE")
+)
+
+# Email login credentials
+MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+password_key = os.getenv('MAIL_PASSWORD')
+
+# SMTP Server and port no for GMAIL.com
+gmail_server = os.getenv('EMAIL_SERVER')
+gmail_port = 587
+
+# Starting email server connection
+my_server = smtplib.SMTP(gmail_server, gmail_port)
+my_server.ehlo()
+my_server.starttls()
+my_server.login(MAIL_USERNAME, password_key)
 
 @app.route('/', methods=['GET'])
 def home():
     return "Welcome to the Flask app!"
-
 
 # /submit -> Receives form data from Frontend form
 @app.route('/submit', methods=['POST'])
@@ -69,27 +88,17 @@ def submit_form():
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
 
+# Cleanup on app shutdown
+@app.before_first_request
+def setup():
+    # Ensures that any additional setup needed before the first request is done
+    pass
+
+@app.teardown_appcontext
+def teardown(exception):
+    if db.is_connected():
+        db.close()
+    my_server.quit()
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8000)))
-
-    # For DB connection to MySQL
-    db = mysql.connector.connect(
-        host=os.getenv("DATABASE_HOST"),
-        user=os.getenv("DATABASE_USER"),
-        password=os.getenv("DATABASE_PASSWORD"),
-        database=os.getenv("DATABASE")
-    )
-
-    # Email login credentials
-    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
-    password_key = os.getenv('MAIL_PASSWORD')
-
-    # SMTP Server and port no for GMAIL.com
-    gmail_server =  os.getenv('EMAIL_SERVER')
-    gmail_port = 587
-
-    # Starting email server connection
-    my_server = smtplib.SMTP(gmail_server, gmail_port)
-    my_server.ehlo()
-    my_server.starttls()
-    my_server.login(MAIL_USERNAME, password_key)
