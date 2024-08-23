@@ -40,6 +40,11 @@ my_server.ehlo()
 my_server.starttls()
 my_server.login(MAIL_USERNAME, password_key)
 
+@app.route('/', methods=['GET'])
+def home():
+    return "Welcome to the Flask app!"
+
+
 # /submit -> Receives form data from Frontend form
 @app.route('/submit', methods=['POST'])
 def submit_form():
