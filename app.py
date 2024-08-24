@@ -77,14 +77,15 @@ def submit_form():
         my_server.sendmail(
             from_addr=MAIL_USERNAME,
             to_addrs=email,
-            msg=autoResponse(name, email, MAIL_USERNAME)
+            msg=autoResponse(name, surname, email, MAIL_USERNAME)
         )
         
         # Send automated notification
+        notification_mail = os.getenv('NOTIFICATION_MAIL')
         my_server.sendmail(
             from_addr=MAIL_USERNAME,
-            to_addrs=MAIL_USERNAME,
-            msg=autoNotification(name, surname, email, phone, now.strftime("%d-%m-%Y %H:%M:%S"), message, MAIL_USERNAME)
+            to_addrs=notification_mail,
+            msg=autoNotification(name, surname, email, phone, now.strftime("%d-%m-%Y %H:%M:%S"), message, MAIL_USERNAME, notification_mail)
         )
 
         return jsonify({"message": "Data submitted successfully"}), 201

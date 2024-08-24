@@ -1,12 +1,12 @@
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def autoNotification(name, surname, email, phone, timeestamp, received_message, sender):
+def autoNotification(name, surname, email, phone, timeestamp, received_message, sender, notification_mail):
 
     # Create a multipart message and set headers
     message = MIMEMultipart()
     message["From"] = sender
-    message["To"] = sender
+    message["To"] = notification_mail
     message["Subject"] = f'💼 {name}, sent you a new message!'
 
     # Message body

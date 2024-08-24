@@ -1,7 +1,7 @@
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-def autoResponse(name, email, sender):
+def autoResponse(name, surname, email, sender):
 
     # Create a multipart message and set headers
     message = MIMEMultipart()
@@ -13,7 +13,7 @@ def autoResponse(name, email, sender):
     html = f'''\
     <html>
         <body>
-            <p>Hi { name },<br>
+            <p>Hi {name + ' ' + surname},<br>
                 <br>
                 Thank you for getting in touch with me through my portfolio. I appreciate you taking the time to reach out!<br>
                 <br>
@@ -29,7 +29,10 @@ def autoResponse(name, email, sender):
                 <br>
                 <b>Phone: </b>+52 1 5554311082<br>
                 <b>LinkedIn: </b><a href = 'www.linkedin.com/in/augusto-aleman'>www.linkedin.com/in/augusto-aleman</a><br>
-                <b>Email: </b>oa.alemanesparza@gmail.com<br>
+                <b>Email: </b>- contact@octavio-aleman.tech<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- <a>oa.alemanesparza@gmail.com</a><br>
+                    </ul>
+                <br>
             </p>
         </body>
     </html>
