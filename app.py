@@ -1,5 +1,5 @@
 # Import necessary dependencies
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, make_response
 import mysql.connector
 from flask_cors import CORS
 
@@ -97,8 +97,10 @@ def submit_form():
 @app.route('/download', methods=['GET'])
 def download():
     try:
-        path = './files/Resume Octavio Aleman.pdf'
-        return send_file(path, as_attachment=True)
+        file_path = './files/Resume Octavio Aleman.pdf'
+        response = make_response(send_file(file_path, as_attachment=True))
+        response.headers['Content-Disposition'] = 'attachment; filename=archivo.pdf'
+        return response
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
