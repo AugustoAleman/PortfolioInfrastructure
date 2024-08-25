@@ -1,5 +1,5 @@
 # Import necessary dependencies
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import mysql.connector
 from flask_cors import CORS
 
@@ -29,7 +29,6 @@ CORS(app)
 @app.route('/', methods=['GET'])
 def home():
     return "Welcome to the Flask app!"
-
 
 # /submit -> Receives form data from Frontend form
 @app.route('/submit', methods=['POST'])
@@ -93,6 +92,17 @@ def submit_form():
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": str(e)}), 500
+    
+# /download -> returns resume file
+@app.route('/download', methods=['GET'])
+def download():
+    try:
+        path = './files/Resume Octavio Aleman.pdf'
+        return send_file(path, as_attachment=True)
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.getenv('PORT', 8000)))
