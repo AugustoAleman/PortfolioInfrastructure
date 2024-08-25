@@ -34,6 +34,14 @@ def home():
 @app.route('/submit', methods=['POST'])
 def submit_form():
     try:
+        # Establish a new database connection for this request
+        db = mysql.connector.connect(
+            host=os.getenv("DATABASE_HOST"),
+            user=os.getenv("DATABASE_USER"),
+            password=os.getenv("DATABASE_PASSWORD"),
+            database=os.getenv("DATABASE")
+        )
+
         # Parse JSON data from request
         data = request.get_json()
         if not data:
@@ -55,6 +63,10 @@ def submit_form():
 
         cursor.execute(sql, values)
         db.commit()
+
+        # Close the cursor and the connection
+        cursor.close()
+        db.close()
 
         # Email login credentials
         MAIL_USERNAME = os.getenv('MAIL_USERNAME')
@@ -87,6 +99,9 @@ def submit_form():
             msg=autoNotification(name, surname, email, phone, now.strftime("%d-%m-%Y %H:%M:%S"), message, MAIL_USERNAME, notification_mail)
         )
 
+        # Close the email server connection
+        my_server.quit()
+
         return jsonify({"message": "Data submitted successfully"}), 201
     
     except Exception as e:
@@ -97,9 +112,9 @@ def submit_form():
 @app.route('/download', methods=['GET'])
 def download():
     try:
-        file_path = './files/Resume Octavio Aleman.pdf'
+        file_path = './files/resume.pdf'
         response = make_response(send_file(file_path, as_attachment=True))
-        response.headers['Content-Disposition'] = 'attachment; filename=archivo.pdf'
+        response.headers['Content-Disposition'] = 'attachment; filename=resume.pdf'
         return response
     except Exception as e:
         print(f"Error: {e}")
